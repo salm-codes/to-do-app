@@ -1,11 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodoAction } from "../store/actions";
 
-type HandleTodoProps = {
-  onHandleTodo: (todo: string) => void;
-};
-
-export default function Form(props: HandleTodoProps) {
+export default function Form() {
   const [input, setInput] = useState("");
+  const dispatch = useDispatch();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -13,7 +12,7 @@ export default function Form(props: HandleTodoProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.onHandleTodo(input);
+    dispatch(addTodoAction(input));
     setInput("");
   };
 
@@ -28,7 +27,11 @@ export default function Form(props: HandleTodoProps) {
         value={input}
         onChange={handleInputChange}
       />
-      <button type="submit" className="btn btn-clear">
+      <button
+        type="submit"
+        className="btn btn-clear"
+        disabled={input.length === 0}
+      >
         Add
       </button>
     </form>

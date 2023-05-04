@@ -1,44 +1,65 @@
+import { useDispatch } from "react-redux";
 import { Todo } from "../App";
+import { removeTodoAction, toggleTodoAction } from "../store/actions";
 
 type TodoListProps = {
+  filter: string;
   todos: Todo[];
-  onHandleCompleted: (id: string) => void;
-  onHandleDelete: (id: string) => void;
 };
 
-function TodoList(props: TodoListProps) {
-  const handleChangeCheckbox = (id: string) => {
-    props.onHandleCompleted(id);
-  };
+type ListProps = {
+  todo: Todo;
+};
 
-  const handleDelete = (id: string) => {
-    props.onHandleDelete(id);
-  };
+function List(props: ListProps) {
+  const dispatch = useDispatch();
 
   return (
     <div className="todo-list-container">
       <ul>
-        {props.todos.map((todo) => (
-          <li key={todo.id}>
-            <label className="label-container">
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => handleChangeCheckbox(todo.id)}
-              />
-              <span className="checkmark"></span>
-              <span className="todo">{todo.task}</span>
-            </label>
-
-            <button
-              className="btn-delete"
-              onClick={() => handleDelete(todo.id)}
-            ></button>
-          </li>
-        ))}
+        <li key={props.todo.id}>
+          <label className="label-container">
+            <input
+              type="checkbox"
+              checked={props.todo.completed}
+              onChange={() => dispatch(toggleTodoAction(props.todo.id))}
+            />
+            <span className="checkmark"></span>
+            <span className="todo">{props.todo.task}</span>
+          </label>
+          <button
+            className="btn-delete"
+            onClick={() => dispatch(removeTodoAction(props.todo.id))}
+          ></button>
+        </li>
       </ul>
     </div>
   );
 }
+
+const TodoList = (props: TodoListProps) => {
+  return (
+    <div className="todo-list-container">
+      <ul>
+        {props.filter === "All" &&
+          props.todos.map((todo) => <List key={todo.id} todo={todo} />)}
+
+        {props.filter === "Active" &&
+          props.todos
+            .filter((todo) => todo.completed !== true)
+            .map((filteredTodo) => (
+              <List key={filteredTodo.id} todo={filteredTodo} />
+            ))}
+
+        {props.filter === "Completed" &&
+          props.todos
+            .filter((todo) => todo.completed !== false)
+            .map((filteredTodo) => (
+              <List key={filteredTodo.id} todo={filteredTodo} />
+            ))}
+      </ul>
+    </div>
+  );
+};
 
 export default TodoList;

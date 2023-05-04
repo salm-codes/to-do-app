@@ -1,23 +1,28 @@
+import { useDispatch } from "react-redux";
 import { Todo } from "../App";
+import { clearCompletedAction, filterAction } from "../store/actions";
 
 type FilterProps = {
   filter: string;
-  onHandleFilter: (filter: string) => void;
   todos: Todo[];
-  onHandleClear: () => void;
 };
 
 function Filter(props: FilterProps) {
+  const dispatch = useDispatch();
   return (
     <div className="footer">
       <span className="todos-count">
-        <strong>{props.todos.length === 0 ? "No" : props.todos.length}</strong>{" "}
+        <strong>
+          {props.todos.length === 0
+            ? "No"
+            : props.todos.filter((x) => !x.completed).length}
+        </strong>{" "}
         item left
       </span>
       <div className="filters">
         <button
           className={props.filter === "All" ? "btn-clear active" : "btn-clear"}
-          onClick={() => props.onHandleFilter("All")}
+          onClick={() => dispatch(filterAction("All"))}
         >
           All
         </button>
@@ -25,7 +30,7 @@ function Filter(props: FilterProps) {
           className={
             props.filter === "Active" ? "btn-clear active" : "btn-clear"
           }
-          onClick={() => props.onHandleFilter("Active")}
+          onClick={() => dispatch(filterAction("Active"))}
         >
           Active
         </button>
@@ -33,14 +38,19 @@ function Filter(props: FilterProps) {
           className={
             props.filter === "Completed" ? "btn-clear active" : "btn-clear"
           }
-          onClick={() => props.onHandleFilter("Completed")}
+          onClick={() => {
+            dispatch(filterAction("Completed"));
+          }}
         >
           Completed
         </button>
       </div>
 
       {props.todos.length !== 0 && (
-        <button className="btn-clear" onClick={() => props.onHandleClear()}>
+        <button
+          className="btn-clear"
+          onClick={() => dispatch(clearCompletedAction())}
+        >
           Clear completed
         </button>
       )}
