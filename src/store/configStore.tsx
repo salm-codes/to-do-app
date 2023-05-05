@@ -1,10 +1,10 @@
-import { legacy_createStore as createStore, combineReducers } from "redux";
-import todoReducer from "./todosReducer";
-import filterReducer from "./filterReducer";
-const rootReducer = combineReducers({
-  todosSlice: todoReducer,
-  filterSlice: filterReducer,
+import { configureStore } from "@reduxjs/toolkit";
+import todoReducer from "./reducer";
+
+const store = configureStore({
+  reducer: {
+    todosSlice: todoReducer,
+  },
 });
-const store = createStore(rootReducer);
 
 export default store;

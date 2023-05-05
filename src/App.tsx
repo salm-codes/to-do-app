@@ -11,8 +11,8 @@ export type Todo = {
 };
 
 function App() {
-  const todos = useSelector((state: any = {}) => state.todosSlice);
-  const filter = useSelector((state: any = {}) => state.filterSlice);
+  const todosState = useSelector((state: any = {}) => state.todosSlice.todos);
+  const filterState = useSelector((state: any = {}) => state.todosSlice.filter);
 
   return (
     <>
@@ -20,8 +20,8 @@ function App() {
         <h1>Todos</h1>
         <div className="card">
           <Form />
-          <TodoList filter={filter} todos={todos} />
-          <Filter filter={filter} todos={todos} />
+          <TodoList filterState={filterState} todos={todosState} />
+          <Filter filterState={filterState} todos={todosState} />
         </div>
       </div>
     </>

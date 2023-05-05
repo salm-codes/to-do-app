@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addTodoAction } from "../store/actions";
+import { addTodoAction } from "../store/reducer";
 
 export default function Form() {
   const [input, setInput] = useState("");
@@ -12,7 +12,7 @@ export default function Form() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addTodoAction(input));
+    dispatch(addTodoAction({ task: input }));
     setInput("");
   };
 
@@ -21,7 +21,6 @@ export default function Form() {
       <input
         type="text"
         id="todo_input"
-        autoComplete="off"
         placeholder="What needs to be done?"
         maxLength={36}
         value={input}
